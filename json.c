@@ -38,7 +38,7 @@
 #ifdef __cplusplus
    const struct _json_value json_value_none; /* zero-d by ctor */
 #else
-   const struct _json_value json_value_none = { 0 };
+   const struct _json_value json_value_none;
 #endif
 
 #include <stdio.h>
@@ -213,7 +213,8 @@ json_value * json_parse_ex (json_settings * settings,
    unsigned int cur_line;
    const json_char * cur_line_begin, * i, * end;
    json_value * top, * root, * alloc = 0;
-   json_state state = { 0 };
+   static const json_state _state;
+   json_state state = _state;
    long flags;
    long num_digits, num_e;
    json_int_t num_fraction;
@@ -810,7 +811,8 @@ e_failed:
 
 json_value * json_parse (const json_char * json, size_t length)
 {
-   json_settings settings = { 0 };
+   static const json_settings _settings;
+   json_settings settings = _settings;
    return json_parse_ex (&settings, json, length, 0);
 }
 
@@ -866,7 +868,8 @@ void json_value_free_ex (json_settings * settings, json_value * value)
 
 void json_value_free (json_value * value)
 {
-   json_settings settings = { 0 };
+   static const json_settings _settings;
+   json_settings settings = _settings;
    settings.mem_free = default_free;
    json_value_free_ex (&settings, value);
 }
